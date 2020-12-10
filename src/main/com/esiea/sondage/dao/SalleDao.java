@@ -1,7 +1,6 @@
 package com.esiea.sondage.dao;
 
 import com.esiea.sondage.model.SalleSondage;
-import com.esiea.sondage.model.Sondage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
