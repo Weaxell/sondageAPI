@@ -17,7 +17,7 @@ public class SalleController {
     @Autowired
     SalleDao salleDao;
 
-    @GetMapping(value = "/Sondages")
+    @GetMapping(value = "/Salles")
     public List<SalleSondage> listSalles(@RequestParam("token") String token) {
         List<SalleSondage> listSalles = new ArrayList<SalleSondage>();
 
@@ -30,7 +30,7 @@ public class SalleController {
         return listSalles;
     }
 
-    @PostMapping(value = "/Sondages")
+    @PostMapping(value = "/Salles")
     public ResponseEntity<Void> addSalle(@Valid @RequestBody SalleSondage salleSondage, @RequestParam("token") String token) {
         SalleSondage salleAdded = salleDao.save(salleSondage);
 
