@@ -8,11 +8,9 @@ import java.util.List;
 @Entity
 public class SalleSondage {
     @Id
-    private long id;
+    private int id;
     private String nom;
-
-    @ElementCollection
-    private List<Integer> listUtilisateurs;
+    private int idProprietaire;
 
     @ElementCollection
     private List<Integer> listSondage;
@@ -20,11 +18,19 @@ public class SalleSondage {
     public SalleSondage() {
     }
 
-    public long getId() {
+    public int getIdProprietaire() {
+        return idProprietaire;
+    }
+
+    public void setIdProprietaire(int idProprietaire) {
+        this.idProprietaire = idProprietaire;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -34,14 +40,6 @@ public class SalleSondage {
 
     public void setNom(String nom) {
         this.nom = nom;
-    }
-
-    public List<Integer> getListUtilisateurs() {
-        return listUtilisateurs;
-    }
-
-    public void setListUtilisateurs(List<Integer> listUtilisateurs) {
-        this.listUtilisateurs = listUtilisateurs;
     }
 
     public List<Integer> getListSondage() {
@@ -57,7 +55,6 @@ public class SalleSondage {
         return "SalleSondage{" +
                 "id=" + id +
                 ", nom='" + nom + '\'' +
-                ", listUtilisateurs=" + listUtilisateurs +
                 ", listSondage=" + listSondage +
                 '}';
     }

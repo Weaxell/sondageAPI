@@ -15,11 +15,19 @@ public class Sondage {
     private List<String> reponses;
 
     private boolean isPublic;
+    private int idSalle;
 
-    @ElementCollection
-    private List<Integer> listSalles;
+
 
     public Sondage() {
+    }
+
+    public int getIdSalle() {
+        return idSalle;
+    }
+
+    public void setIdSalle(int idSalle) {
+        this.idSalle = idSalle;
     }
 
     public int getId() {
@@ -52,13 +60,5 @@ public class Sondage {
 
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
-    }
-
-    public List<Integer> getListSalles() {
-        return listSalles;
-    }
-
-    public void setListSalles(List<Integer> listSalles) {
-        this.listSalles = listSalles;
     }
 }

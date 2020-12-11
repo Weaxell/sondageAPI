@@ -1,8 +1,10 @@
 package com.esiea.sondage.model;
 
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.List;
 
 @Entity
 public class Utilisateur {
@@ -10,6 +12,17 @@ public class Utilisateur {
     private int id;
     private String pseudo;
     private String passwd;
+
+    @ElementCollection
+    private List<Integer> listSalles;
+
+    public List<Integer> getListSalles() {
+        return listSalles;
+    }
+
+    public void setListSalles(List<Integer> listSalles) {
+        this.listSalles = listSalles;
+    }
 
     public long getId() {
         return id;
