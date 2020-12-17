@@ -7,11 +7,9 @@ import com.esiea.sondage.model.Sondage;
 import com.esiea.sondage.web.exceptions.NotFoundException;
 import com.esiea.sondage.web.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +47,8 @@ public class SondageController {
     @GetMapping(value = "/sondage/{id}")
     public Sondage getSondage(@PathVariable int id, @RequestParam("userid") int userid) {
         Sondage sondage = sondageDao.findById(id);
+
+        // si le sondage est public
         if(sondage != null) {
             if(sondage.isPublic())
                 return sondage;
@@ -56,19 +56,47 @@ public class SondageController {
             else if(utilisateurDao.findById(userid) == null) {
                 throw new UnauthorizedException("L'utilisateur " + userid + " n'existe pas");
             }
-            // sinon, si l'utilisateur existe
-            else if(utilisateurDao.findById(userid) != null) {
-                // si l'utilisateur a acces a la salle ou est le sondage
-                if(utilisateurDao.findById(userid).getListSalles().contains(sondage.getIdSalle()))
-                    return sondage;
-            }
-            else {
-                throw new NotFoundException("Le sondage d'id " + id + " n'existe pas");
+            // sinon, si l'utilisateur existe et si l'utilisateur a acces a la salle ou est le sondage
+            else if(utilisateurDao.findById(userid) != null && utilisateurDao.findById(userid).getListSalles().contains(sondage.getSalleId())) {
+                return sondage;
             }
         }
         else {
             throw new NotFoundException("Le sondage d'id " + id + " n'existe pas");
         }
         return sondage;
+    }
+
+    /**
+     * CREATION DE SONDAGE
+     * Permet a un utilisateur de creer un sondage s'il est public ou s'il la creation se fait dans une salle à laquelle l'utilisateur a acces
+     * @param sondage
+     * @param userid
+     */
+
+    @PostMapping(value = "/sondages")
+    public void addSondage(@Valid @RequestBody Sondage sondage, @RequestParam("userid") int userid) {
+        sondage.setIdProprietaire(userid);
+        if(sondage.isPublic())
+            sondageDao.save(sondage);
+        else if(salleDao.findById(sondage.getSalleId()) != null) {
+            if(salleDao.findById(sondage.getSalleId()).getListUtilisateurs().contains(userid))
+                sondageDao.save(sondage);
+        }
+        else
+            throw new UnauthorizedException("Action non autorisee");
+    }
+
+    @PutMapping(value = "/sondages")
+    public void modifierSondage(@Valid @RequestBody Sondage sondage, @RequestParam("userid") int userid) {
+        sondage.setIdProprietaire(userid);
+        if(sondage.isPublic())
+            sondageDao.save(sondage);
+        else if(utilisateurDao.findById(userid).getListSalles().contains(sondage.getSalleId())) {
+            Sondage sond = sondageDao.save(sondage);
+            salleDao.findById(sond.getSalleId()).addSondage(sond.getId());
+        }
+        else
+            throw new UnauthorizedException("Action non autorisee");
     }
 }

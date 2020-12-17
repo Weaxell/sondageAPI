@@ -34,14 +34,14 @@ public class SalleController {
     public List<SalleSondage> listSalles(@RequestParam("userid") int userid) {
         List<SalleSondage> listSalles = new ArrayList<SalleSondage>();
 
-        System.out.println("################ Userid: " + userid);
+        // System.out.println("################ Userid: " + userid);
 
         Utilisateur utilisateur = null;
         utilisateur = utilisateurDao.findById(userid);
 
-        if(utilisateur != null) {
-            for(int idsalle : utilisateurDao.findById(userid).getListSalles())
-                listSalles.add(salleDao.findById(idsalle));
+        for(SalleSondage salle : salleDao.findAll()) {
+            if(salle.getListUtilisateurs().contains(userid))
+                listSalles.add(salle);
         }
 
         return listSalles;
@@ -74,6 +74,7 @@ public class SalleController {
     @PostMapping(value = "/salles")
     public ResponseEntity<Void> addSalle(@Valid @RequestBody SalleSondage salleSondage, @RequestParam("userid") int userid) {
         salleSondage.setIdProprietaire(userid);
+        salleSondage.addUser(userid);
         SalleSondage salleAdded = salleDao.save(salleSondage);
 
         if(salleAdded == null)
@@ -86,5 +87,14 @@ public class SalleController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @PostMapping(value = "/salles/{id}")
+    public void adduser(@Valid @RequestBody SalleSondage salleSondage, @RequestParam("userid") int userid, @RequestParam("userid") int useraddid) {
+        if(salleDao.findById(salleSondage.getId()).getListUtilisateurs().contains(userid)) {
+            SalleSondage salle = salleDao.findById(salleSondage.getId());
+            salle.addUser(useraddid);
+            salleDao.save(salleSondage);
+        }
     }
 }

@@ -16,13 +16,24 @@ public class Sondage {
 
     private boolean isPublic;
     private int idSalle;
+    private int idProprietaire;
 
 
 
     public Sondage() {
     }
 
-    public int getIdSalle() {
+
+
+    public int getIdProprietaire() {
+        return idProprietaire;
+    }
+
+    public void setIdProprietaire(int idProprietaire) {
+        this.idProprietaire = idProprietaire;
+    }
+
+    public int getSalleId() {
         return idSalle;
     }
 

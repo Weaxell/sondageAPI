@@ -1,14 +1,17 @@
 package com.esiea.sondage.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Vote {
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
     private int idSondage;
-    private int idChoix;
+    private String choix;
     private int idUtilisateur;
 
     public int getId() {
@@ -27,12 +30,12 @@ public class Vote {
         this.idSondage = idSondage;
     }
 
-    public int getIdChoix() {
-        return idChoix;
+    public String getChoix() {
+        return choix;
     }
 
-    public void setIdChoix(int idChoix) {
-        this.idChoix = idChoix;
+    public void setChoix(String choix) {
+        this.choix = choix;
     }
 
     public int getIdUtilisateur() {
